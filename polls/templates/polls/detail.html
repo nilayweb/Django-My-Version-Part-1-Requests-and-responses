@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ question.question_text }}</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9; }
-        h1 { color: #333; }
-        p { font-size: 18px; color: #555; }
-        a { color: #4CAF50; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
-    <h1>{{ question.question_text }}</h1>
-    <p>Published at: {{ question.pub_date|date:"Y-m-d H:i" }}</p>
-    <p><a href="{% url 'polls:index' %}">Back to all polls</a></p>
-</body>
-</html>
+<h1>{{ question.question_text }}</h1>
+
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% endif %}
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+{% csrf_token %}
+
+{% for choice in question.choice_set.all %}
+
+<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+<label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+
+{% endfor %}
+
+<input type="submit" value="Vote">
+</form>
